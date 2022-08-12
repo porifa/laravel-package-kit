@@ -15,9 +15,9 @@ class YourPackageNameServiceProvider extends ServiceProvider
             $this->publishViews();
 
             $migrationFileName = 'create_your_package_name_table.php';
-            if (!$this->migrationFileExists($migrationFileName)) {
+            if (! $this->migrationFileExists($migrationFileName)) {
                 $this->publishes([
-                    __DIR__ . "/../database/migrations/{$migrationFileName}.stub" => database_path('migrations/' . date('Y_m_d_His', time()) . '_' . $migrationFileName),
+                    __DIR__."/../database/migrations/{$migrationFileName}.stub" => database_path('migrations/'.date('Y_m_d_His', time()).'_'.$migrationFileName),
                 ], 'migrations');
             }
 
@@ -26,7 +26,7 @@ class YourPackageNameServiceProvider extends ServiceProvider
             ]);
         }
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'your_package_name');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'your_package_name');
     }
 
     public function register()
@@ -49,19 +49,19 @@ class YourPackageNameServiceProvider extends ServiceProvider
     protected function publishConfig(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/your_package_name.php' => config_path('your_package_name.php'),
+            __DIR__.'/../config/your_package_name.php' => config_path('your_package_name.php'),
         ], 'config');
     }
 
     protected function publishViews(): void
     {
         $this->publishes([
-            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/your_package_name'),
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/your_package_name'),
         ], 'views');
     }
 
     protected function mergeConfig(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/your_package_name.php', 'your_package_name');
+        $this->mergeConfigFrom(__DIR__.'/../config/your_package_name.php', 'your_package_name');
     }
 }
