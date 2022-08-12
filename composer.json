@@ -1,17 +1,19 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "porifa/laravel-package-kit",
+    "description": "Toolkit for creating Laravel packages",
     "keywords": [
-        ":vendor_name",
-        "laravel",
-        ":package_slug"
+        "porifa",
+        "package-kit",
+        "package-toolkit",
+        "laravel-package-kit",
+        "laravel-package-toolkit"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/porifa/laravel-package-kit",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Aamir Sohail KmAs",
+            "email": "AamirSohailKmAs@gmail.com",
             "role": "Developer"
         }
     ],
@@ -25,7 +27,7 @@
         "nunomaduro/larastan": "^2.0.1",
         "orchestra/testbench": "^7.0",
         "pestphp/pest": "^1.21",
-        "pestphp/pest-plugin-laravel": "^1.1",
+        "pestphp/pest-plugin-laravel": "^1.2",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
@@ -33,13 +35,12 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\YourPackageName\\": "src",
-            "VendorName\\YourPackageName\\Database\\Factories\\": "database/factories"
+            "Porifa\\LaravelPackageKit\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\YourPackageName\\Tests\\": "tests"
+            "Porifa\\LaravelPackageKit\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -49,16 +50,10 @@
         "test-coverage": "vendor/bin/pest --coverage"
     },
     "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "VendorName\\YourPackageName\\YourPackageNameServiceProvider"
-            ],
-            "aliases": {
-                "YourPackageName": "VendorName\\YourPackageName\\Facades\\YourPackageName"
-            }
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
         }
     },
     "minimum-stability": "dev",
