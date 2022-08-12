@@ -1,0 +1,392 @@
+#!/usr/bin/env php
+<?php
+writeln('');
+writeln("This setup will guide you through creating your package files.");
+writeln('');
+
+$authorNameHint = run('git config user.name');
+$authorName = inquire('Author name', $authorNameHint, '');
+
+$authorEmailHint = run('git config user.email');
+$authorEmail = inquire('Author email', $authorEmailHint, '');
+
+$usernameHint = explode(':', run('git config remote.origin.url'))[1];
+$usernameHint = dirname($usernameHint);
+$usernameHint = basename($usernameHint);
+$authorUsername = inquire('Author username', $usernameHint, '');
+
+$vendorName = inquire('Vendor name', $usernameHint, '');
+$vendorSlug = slugify($vendorName);
+$vendorNamespace = ucwords($vendorName);
+$vendorNamespace = inquire('Vendor namespace', $vendorNamespace, '');
+
+$currentDirectory = getcwd();
+$folderName = basename($currentDirectory);
+
+$YourPackageName = inquire('Package name', $folderName, '');
+$packageSlug = slugify($YourPackageName);
+$packageSlugWithoutPrefix = remove_prefix('laravel-', $packageSlug);
+
+$className = title_case($YourPackageName);
+$className = inquire('Class name', $className, '');
+$variableName = lcfirst($className);
+$description = inquire('Package description', "This is my package {$packageSlug}", '');
+
+writeln('');
+writeln("Let's decide about Packages & Utilities");
+writeln('');
+$usePhpStan = confirm('Enable PhpStan?', true);
+$useLaravelPint = confirm('Enable Laravel Pint?', true);
+$useDependabot = confirm('Enable Dependabot?', true);
+$useUpdateChangelogWorkflow = confirm('Use automatic changelog updater workflow?', true);
+
+writeln('');
+writeln("Let's decide about Files and Directories");
+writeln('');
+
+$hasConfig = confirm('Need Config File?', true);
+$configName = confirm_if($hasConfig, "Config Name ?", $packageSlugWithoutPrefix);
+$hasMigration = confirm('Need Migration File?', true);
+// $migrationTableName = confirm_if($hasMigration, "Migration Name?", title_snake($packageSlug));
+$hasFactory = confirm_if($hasMigration, 'Need Model Factory File?', true);
+$hasViewsDir = confirm('Need resources view Directory?', true);
+$hasStubsDir = confirm('Need stubs Directory?', true);
+
+$hasConsoleCommands = confirm('Need Console Commands?', true);
+$consoleCommandName = inquire_if($hasConsoleCommands, 'Console Command Name?', $className . "Command");
+$hasContracts = confirm('Need Contracts?', true);
+$contractName = inquire_if($hasContracts, 'Contract Name?', $className . "Interface");
+$hasConcerns = confirm('Need Concerns?', true);
+$concernName = inquire_if($hasConcerns, 'Concern Name?', "InteractWith" . $className);
+$hasExceptions = confirm('Need Exceptions?', true);
+$exceptionName = inquire_if($hasExceptions, 'Exception Name?', "Invalid" . $className . "Exception");
+$hasHelperFunction = confirm('Need Helper Functions File?', true);
+
+
+writeln('------------------');
+writeln("Author     : {$authorName} ({$authorUsername}, {$authorEmail})");
+writeln("Vendor     : {$vendorName} ({$vendorSlug})");
+writeln("Package    : {$packageSlug} <{$description}>");
+writeln("Namespace  : {$vendorNamespace}\\{$className}");
+writeln("Class name : {$className}");
+writeln('-----');
+writeln('Packages & Utilities');
+writeln('Use Laravel/Pint     : ' . ($useLaravelPint ? 'yes' : 'no'));
+writeln('Use Larastan/PhpStan : ' . ($usePhpStan ? 'yes' : 'no'));
+writeln('Use Dependabot       : ' . ($useDependabot ? 'yes' : 'no'));
+writeln('Use Auto-Changelog   : ' . ($useUpdateChangelogWorkflow ? 'yes' : 'no'));
+writeln('-----');
+writeln('Files and Directories');
+writeln('Has Config File         : ' . ($hasConfig ? 'yes' : 'no'));
+writeln('Has Migration File      : ' . ($hasMigration ? 'yes' : 'no'));
+writeln('Has Factory File        : ' . ($hasFactory ? 'yes' : 'no'));
+writeln('Has Views Directory     : ' . ($hasViewsDir ? 'yes' : 'no'));
+writeln('Has Stubs Directory     : ' . ($hasStubsDir ? 'yes' : 'no'));
+writeln('Has Command File        : ' . ($hasConsoleCommands ? 'yes' : 'no'));
+writeln('Console Command Name    : ' . $consoleCommandName, $consoleCommandName);
+writeln('Has Contract File       : ' . ($hasContracts ? 'yes' : 'no'));
+writeln('Contract Name           : ' . $contractName, $contractName);
+writeln('Has Concern File        : ' . ($hasConcerns ? 'yes' : 'no'));
+writeln('Concern Name            : ' . $concernName, $concernName);
+writeln('Has Exception File      : ' . ($hasExceptions ? 'yes' : 'no'));
+writeln('Exception Name          : ' . $exceptionName, $exceptionName);
+writeln('Has Helper Function File: ' . ($hasHelperFunction ? 'yes' : 'no'));
+writeln('------------------');
+
+writeln('This script will replace the above values in all relevant files in the project directory.');
+
+if (!confirm('Modify files?', true)) {
+    exit(1);
+}
+
+if (!$hasConfig) {
+    safeRmdir(__DIR__ . '/config');
+}
+
+if (!$hasMigration) {
+    safeRmdir(__DIR__ . '/database');
+}
+
+if (!$hasViewsDir) {
+    safeRmdir(__DIR__ . '/resources');
+}
+
+if (!$hasStubsDir) {
+    safeRmdir(__DIR__ . '/stubs');
+}
+
+if (!$hasConsoleCommands) {
+    safeRmdir(__DIR__ . '/src/Console');
+    // todo remove from service provider as well
+}
+
+if (!$hasContracts) {
+    safeRmdir(__DIR__ . '/src/Contracts');
+}
+
+if (!$hasConcerns) {
+    safeRmdir(__DIR__ . '/src/Concerns');
+}
+
+if (!$hasExceptions) {
+    safeRmdir(__DIR__ . '/src/Exceptions');
+}
+
+if (!$hasHelperFunction) {
+    safeUnlink(__DIR__ . '/src/Functions.php');
+}
+
+$files = (str_starts_with(strtoupper(PHP_OS), 'WIN') ? replaceForWindows() : replaceForAllOtherOSes());
+
+foreach ($files as $file) {
+    replace_in_file($file, [
+        ':author_name' => ucwords($authorName),
+        ':author_username' => $authorUsername,
+        'author@domain.com' => $authorEmail,
+        ':vendor_name' => $vendorName,
+        ':vendor_slug' => $vendorSlug,
+        'VendorName' => $vendorNamespace,
+        ':package_name' => $YourPackageName,
+        ':package_slug' => $packageSlug,
+        'YourPackageName' => $className,
+        'migration_table_name' => title_snake($packageSlug),
+        'variable' => $variableName,
+        ':package_description' => $description,
+    ]);
+
+    match (true) {
+        str_contains($file, determineSeparator('config/your_package_name.php')) => rename($file, determineSeparator('./config/' . $$configName . '.php')),
+
+        str_contains($file, determineSeparator('database/migrations/create_your_package_name_table.php.stub')) => rename($file, determineSeparator('./database/migrations/create_' . title_snake($packageSlugWithoutPrefix) . '_table.php.stub')),
+        
+        str_contains($file, determineSeparator('src/Concerns/HasSomethingTrait.php')) => rename($file, determineSeparator('./src/Concerns/' . $concernName . '.php')),
+
+        str_contains($file, determineSeparator('src/Console/Commands/YourPackageNameCommand.php')) => rename($file, determineSeparator('./src/Console/Commands/' . $className . 'Command.php')),
+
+        str_contains($file, determineSeparator('src/Contracts/SomethingableInterface.php')) => rename($file, determineSeparator('./src/Contracts/' . $contractName . '.php')),
+
+        str_contains($file, determineSeparator('src/Exceptions/InvalidSomething.php')) => rename($file, determineSeparator('./src/Exceptions/' . $exceptionName . '.php')),
+
+        str_contains($file, determineSeparator('src/Facades/YourPackageName.php')) => rename($file, determineSeparator('./src/Facades/' . $className . '.php')),
+
+        str_contains($file, determineSeparator('src/YourPackageName.php')) => rename($file, determineSeparator('./src/' . $className . '.php')),
+
+        str_contains($file, determineSeparator('src/YourPackageNameServiceProvider.php')) => rename($file, determineSeparator('./src/' . $className . 'ServiceProvider.php')),
+
+
+        str_contains($file, 'README.md') => remove_readme_paragraphs($file),
+        default => [],
+    };
+}
+
+if (!$useLaravelPint) {
+    safeUnlink(__DIR__ . '/.github/workflows/pint.yml');
+}
+
+if (!$usePhpStan) {
+    safeUnlink(__DIR__ . '/phpstan.neon.dist');
+    safeUnlink(__DIR__ . '/phpstan-baseline.neon');
+    safeUnlink(__DIR__ . '/.github/workflows/phpstan.yml');
+
+    remove_composer_deps([
+        'phpstan/extension-installer',
+        'phpstan/phpstan-deprecation-rules',
+        'phpstan/phpstan-phpunit',
+        'nunomaduro/larastan',
+    ]);
+
+    remove_composer_script('phpstan');
+}
+
+if (!$useDependabot) {
+    safeUnlink(__DIR__ . '/.github/dependabot.yml');
+    safeUnlink(__DIR__ . '/.github/workflows/dependabot-auto-merge.yml');
+}
+
+
+if (!$useUpdateChangelogWorkflow) {
+    safeUnlink(__DIR__ . '/.github/workflows/update-changelog.yml');
+}
+
+confirm('Execute `composer install` and run tests?') && run('composer install && composer test');
+
+confirm('Let this script delete itself?', true) && unlink(__FILE__);
+
+function run(string $command): string
+{
+    return trim((string) shell_exec($command));
+}
+
+function inquire(string $question, string $default = '', string $example = ''): string
+{
+    $answer = readline(
+        $question .
+            ($example  ? " (e.g {$example})" : null) .
+            ($default ? " [{$default}]" : null) .
+            ': '
+    );
+
+    if (!$answer) {
+        return $default;
+    }
+
+    return $answer;
+}
+
+function inquire_if(bool $condition, string $question, string $default = '', string $example = '')
+{
+    if ($condition) {
+        return inquire($question, $default, $example);
+    }
+
+    return '';
+}
+
+function confirm(string $question, bool $default = false): bool
+{
+    $answer = inquire($question . ' [' . ($default ? 'Y/n' : 'y/N') . ']');
+
+    if (!$answer) {
+        return $default;
+    }
+
+    return strtolower($answer) === 'y';
+}
+
+function confirm_if(bool $condition, string $question, bool $default = false): bool
+{
+    if ($condition) {
+        return confirm($question, $default);
+    }
+
+    return false;
+}
+
+function writeln(string $line, bool $codition = true): void
+{
+    if ($codition) {
+        echo $line . PHP_EOL;
+    }
+}
+
+function str_after(string $subject, string $search): string
+{
+    $pos = strrpos($subject, $search);
+
+    if ($pos === false) {
+        return $subject;
+    }
+
+    return substr($subject, $pos + strlen($search));
+}
+
+function remove_prefix(string $prefix, string $content): string
+{
+    if (str_starts_with($content, $prefix)) {
+        return substr($content, strlen($prefix));
+    }
+
+    return $content;
+}
+
+function slugify(string $subject): string
+{
+    return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $subject), '-'));
+}
+
+function title_case(string $subject): string
+{
+    return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $subject)));
+}
+
+function title_snake(string $subject, string $replace = '_'): string
+{
+    return str_replace(['-', '_'], $replace, $subject);
+}
+
+function replace_in_file(string $file, array $replacements): void
+{
+    $contents = file_get_contents($file);
+
+    file_put_contents(
+        $file,
+        str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $contents
+        )
+    );
+}
+
+function remove_composer_deps(array $names)
+{
+    $data = json_decode(file_get_contents(__DIR__ . '/composer.json'), true);
+
+    foreach ($data['require-dev'] as $name => $version) {
+        if (in_array($name, $names, true)) {
+            unset($data['require-dev'][$name]);
+        }
+    }
+
+    file_put_contents(__DIR__ . '/composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+
+function remove_composer_script($scriptName)
+{
+    $data = json_decode(file_get_contents(__DIR__ . '/composer.json'), true);
+
+    foreach ($data['scripts'] as $name => $script) {
+        if ($scriptName === $name) {
+            unset($data['scripts'][$name]);
+            break;
+        }
+    }
+
+    file_put_contents(__DIR__ . '/composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+}
+
+function remove_readme_paragraphs(string $file): void
+{
+    $contents = file_get_contents($file);
+
+    file_put_contents(
+        $file,
+        preg_replace('/<!--delete-->.*<!--\/delete-->/s', '', $contents) ?: $contents
+    );
+}
+
+function safeUnlink(string $filename)
+{
+    if (file_exists($filename) && is_file($filename)) {
+        unlink($filename);
+    }
+}
+
+function safeRmdir(string $dir) {
+    if (!file_exists($dir)) return true;
+    if (!is_dir($dir) || is_link($dir)) return unlink($dir);
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') continue;
+            if (!safeRmdir($dir . "/" . $item)) {
+                chmod($dir . "/" . $item, 0777);
+                if (!safeRmdir($dir . "/" . $item)) return false;
+            };
+        }
+        return rmdir($dir);
+    }
+
+
+function determineSeparator(string $path): string
+{
+    return str_replace('/', DIRECTORY_SEPARATOR, $path);
+}
+
+function replaceForWindows(): array
+{
+    return preg_split('/\\r\\n|\\r|\\n/', run('dir /S /B * | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i ' . basename(__FILE__) . ' | findstr /r /i /M /F:/ ":author :vendor :package VendorName YourPackageName migration_table_name vendor_name vendor_slug author@domain.com"'));
+}
+
+function replaceForAllOtherOSes(): array
+{
+    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|YourPackageName|migration_table_name|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v ' . basename(__FILE__)));
+}
