@@ -4,7 +4,7 @@ namespace Porifa\LaravelPackageKit\Exceptions;
 
 use Exception;
 
-class InvalidPackageException extends Exception
+final class InvalidPackageException extends Exception
 {
     public static function nameIsRequired(): self
     {

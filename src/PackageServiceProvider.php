@@ -12,7 +12,7 @@ abstract class PackageServiceProvider extends ServiceProvider
 
     abstract public function configurePackage(Package $package): void;
 
-    public function register()
+    public function register(): self
     {
         $this->package = $this->newPackage();
 
@@ -29,7 +29,7 @@ abstract class PackageServiceProvider extends ServiceProvider
         return $this;
     }
 
-    public function boot()
+    public function boot(): self
     {
         if ($this->app->runningInConsole()) {
             foreach ($this->package->configFileNames as $configFileName) {
