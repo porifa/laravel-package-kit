@@ -7,7 +7,7 @@ checks:
     code_rating: true
     require_php_tag_first: true
     no_short_method_names:
-        minimum: '3'
+      minimum: "3"
     remove_extra_empty_lines: true
     parameter_doc_comments: true
     remove_php_closing_tag: true
@@ -23,15 +23,14 @@ checks:
     fix_doc_comments: true
 
 build:
-    nodes:
-        tests:
-            tests:
-                override:
-                     - command: ./vendor/bin/pest
-        analysis:
-            tests:
-                override:
-                    -
-                        php-scrutinizer-run
-                        command: phpcs-run
-                        use_website_config: true
+  nodes:
+    tests:
+      tests:
+        override:
+          - command: ./vendor/bin/pest
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+          - command: phpcs-run
+            use_website_config: true
