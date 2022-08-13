@@ -21,4 +21,5 @@ build:
     analysis:
       tests:
         override:
+          - command: ./vendor/bin/pest
           - php-scrutinizer-run
