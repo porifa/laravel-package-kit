@@ -2,20 +2,22 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 1.x.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If there are any vulnerabilities in porifa/laravel-package-kit, don't hesitate to report them.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+1. To report a security issue, please email at <AamirSohailKmAs@gmail.com> instead of using issue tracker.
+
+1. Describe the vulnerability, the steps you took to create the issue, affected versions, and, if known, mitigations for the issue.
+
+1. If you have a fix, that is most welcome -- please attach or summarize it in your message!
+
+1. We will evaluate the vulnerability and, if necessary, release a fix or mitigating steps to address it. We will contact you to let you know the outcome, and will credit you in the report.
+
+1. Please **do not disclose the vulnerability publicly** until a fix is released!
+
+1. Once we have either a) published a fix, or b) declined to address the vulnerability for whatever reason, you are free to publicly disclose it.
