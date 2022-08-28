@@ -14,6 +14,8 @@ abstract class PackageServiceProvider extends ServiceProvider
 
     public function register(): self
     {
+        $this->packageRegistering();
+
         $this->package = $this->newPackage();
 
         $this->package->setBasePath($this->getPackageBaseDir());
@@ -26,11 +28,15 @@ abstract class PackageServiceProvider extends ServiceProvider
             $this->mergeConfigFrom($this->package->basePath("/../config/{$configFileName}.php"), $configFileName);
         }
 
+        $this->packageRegistered();
+
         return $this;
     }
 
     public function boot(): self
     {
+        $this->packageBooting();
+
         if ($this->app->runningInConsole()) {
             foreach ($this->package->configFileNames as $configFileName) {
                 $this->publishes([
@@ -39,7 +45,29 @@ abstract class PackageServiceProvider extends ServiceProvider
             }
         }
 
+        $this->packageBooted();
+
         return $this;
+    }
+
+    public function packageRegistering()
+    {
+        //
+    }
+
+    public function packageRegistered()
+    {
+        //
+    }
+
+    public function packageBooting()
+    {
+        //
+    }
+
+    public function packageBooted()
+    {
+        //
     }
 
     public function newPackage(): Package

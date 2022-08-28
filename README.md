@@ -26,6 +26,15 @@ class YourPackageServiceProvider extends PackageServiceProvider
 }
 ```
 
+### Using lifecycle hooks
+
+According to your package needs, You can put any custom logic in these methods:
+
+-   `packageRegistering`: will be called at the start of the `register` method of `PackageServiceProvider`
+-   `packageRegistered`: will be called at the end of the `register` method of `PackageServiceProvider`
+-   `packageBooting`: will be called at the start of the `boot` method of `PackageServiceProvider`
+-   `packageBooted`: will be called at the end of the `boot` method of `PackageServiceProvider`
+
 ## Testing
 
 ```bash
