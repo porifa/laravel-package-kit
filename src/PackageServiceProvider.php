@@ -2,9 +2,9 @@
 
 namespace Porifa\LaravelPackageKit;
 
-use ReflectionClass;
 use Illuminate\Support\ServiceProvider;
 use Porifa\LaravelPackageKit\Exceptions\InvalidPackageException;
+use ReflectionClass;
 
 abstract class PackageServiceProvider extends ServiceProvider
 {
