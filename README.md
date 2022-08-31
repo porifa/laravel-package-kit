@@ -10,6 +10,7 @@
 This package contains a `PackageServiceProvider` that you can use in your packages to easily register config files, and more.
 
 ## Usage
+In your package you should let your service provider extend `Porifa\LaravelPackageKit\PackageServiceProvider`.
 
 ```php
 use Porifa\LaravelPackageKit\PackageServiceProvider;
@@ -24,6 +25,35 @@ class YourPackageServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
     }
 }
+```
+Passing the package name to `name` is mandatory.
+
+### Working with a config file
+
+To register a config file, you should create a php file with your package name in the `config` directory of your package. In this example it should be at `<package root>/config/your-package-name.php`.
+
+If your package name starts with `laravel-`, we expect that your config file does not contain that prefix. So if your package name is `laravel-cool-package`, the config file should be named `cool-package.php`.
+
+To register that config file, call `hasConfigFile()` on `$package` in the `configurePackage` method.
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasConfigFile();
+```
+
+The `hasConfigFile` method will also make the config file publishable. Users of your package will be able to publish the config file with this command.
+
+```bash
+php artisan vendor:publish --tag=your-package-name-config
+```
+
+Should your package have multiple config files, you can pass their names as an array to `hasConfigFile`
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasConfigFile(['config-file1', 'config-file2']);
 ```
 
 ### Using lifecycle hooks
