@@ -22,7 +22,7 @@ class YourPackageServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('your-package-name')
-            ->hasConfigFile()
+            ->hasConfigFiles()
     }
 }
 ```
@@ -32,28 +32,29 @@ Passing the package name to `name` is mandatory.
 
 To register a config file, you should create a php file with your package name in the `config` directory of your package. In this example it should be at `<package root>/config/your-package-name.php`.
 
-If your package name starts with `laravel-`, we expect that your config file does not contain that prefix. So if your package name is `laravel-cool-package`, the config file should be named `cool-package.php`.
-
-To register that config file, call `hasConfigFile()` on `$package` in the `configurePackage` method.
+To register that config file, call `hasConfigFiles()` on `$package` in the `configurePackage` method.
 
 ```php
 $package
     ->name('your-package-name')
-    ->hasConfigFile();
+    ->hasConfigFiles();
 ```
 
-The `hasConfigFile` method will also make the config file publishable. Users of your package will be able to publish the config file with this command.
+
+If no parameter is passed in `hasConfigFiles` method then we use a convension, if your package name starts with `laravel-`, we expect that your config file does not contain that prefix. So if your package name is `laravel-cool-package`, the config file should be named `cool-package.php`.
+
+The `hasConfigFiles` method will also make the config file publishable. Users of your package will be able to publish the config file with this command.
 
 ```bash
 php artisan vendor:publish --tag=your-package-name-config
 ```
 
-Should your package have multiple config files, you can pass their names as an array to `hasConfigFile`
+If your package have multiple config files then you can pass their names as an array to `hasConfigFiles`
 
 ```php
 $package
     ->name('your-package-name')
-    ->hasConfigFile(['config-file1', 'config-file2']);
+    ->hasConfigFiles(['config-file1', 'config-file2']);
 ```
 
 ### Using lifecycle hooks

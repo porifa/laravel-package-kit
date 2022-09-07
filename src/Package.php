@@ -19,7 +19,7 @@ class Package
         return $this;
     }
 
-    public function hasConfigFile($configFileName = null): self
+    public function hasConfigFiles(string|array $configFileName = null): self
     {
         $configFileName = $configFileName ?? $this->shortName();
 

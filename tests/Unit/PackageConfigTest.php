@@ -8,7 +8,7 @@ beforeAll(
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
             $package
             ->name('example')
-            ->hasConfigFile('example');
+            ->hasConfigFiles('example');
         };
     }
 );
