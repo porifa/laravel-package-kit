@@ -10,6 +10,8 @@ class Package
 
     public array $configFileNames = [];
 
+    public array $commands = [];
+
     public string $basePath;
 
     public function name(string $name): self
@@ -28,6 +30,17 @@ class Package
         }
 
         $this->configFileNames = $configFileName;
+
+        return $this;
+    }
+
+    public function hasCommands(string|array $commandClassNames): self
+    {
+        if (! is_array($commandClassNames)) {
+            $commandClassNames = [$commandClassNames];
+        }
+
+        $this->commands = $commandClassNames;
 
         return $this;
     }

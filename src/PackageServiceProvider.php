@@ -43,6 +43,10 @@ abstract class PackageServiceProvider extends ServiceProvider
                     $this->package->basePath("/../config/{$configFileName}.php") => config_path("{$configFileName}.php"),
                 ], "{$this->package->shortName()}-config");
             }
+
+            if (! empty($this->package->commands)) {
+                $this->commands($this->package->commands);
+            }
         }
 
         $this->packageBooted();

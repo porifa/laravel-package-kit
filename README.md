@@ -22,7 +22,7 @@ class YourPackageServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('your-package-name')
-            ->hasConfigFiles()
+            ->hasConfigFiles();
     }
 }
 ```
@@ -55,6 +55,27 @@ If your package have multiple config files then you can pass their names as an a
 $package
     ->name('your-package-name')
     ->hasConfigFiles(['config-file1', 'config-file2']);
+```
+
+### ### Working with commands
+
+You can register any command you package provides with the `hasCommands` method.
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasCommands(YourPackageCommand::class);
+```
+
+If your package provides multiple commands, you can pass an array to `hasCommands` method
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasCommands([
+        YourPackageCommand::class,
+        YourOtherPackageCommand::class,
+    ]);
 ```
 
 ### Using lifecycle hooks
