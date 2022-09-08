@@ -12,6 +12,8 @@ class Package
 
     public array $commands = [];
 
+    public array $migrationFileNames = [];
+
     public string $basePath;
 
     public function name(string $name): self
@@ -41,6 +43,17 @@ class Package
         }
 
         $this->commands = $commandClassNames;
+
+        return $this;
+    }
+
+    public function hasMigrations(string|array $migrationFileNames): self
+    {
+        if (! is_array($migrationFileNames)) {
+            $migrationFileNames = [$migrationFileNames];
+        }
+
+        $this->migrationFileNames = $migrationFileNames;
 
         return $this;
     }

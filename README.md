@@ -7,7 +7,7 @@
 [![Downloads](https://img.shields.io/packagist/dt/porifa/laravel-package-kit.svg?style=flat-square)](https://packagist.org/packages/porifa/laravel-package-kit)
 [![License](https://img.shields.io/packagist/l/porifa/laravel-package-kit.svg?style=flat-square)](https://packagist.org/packages/porifa/laravel-package-kit)
 
-This package contains a `PackageServiceProvider` that you can use in your packages to easily register config files, and more.
+This package contains a `PackageServiceProvider` that you can use in your packages to easily register config files, commands, migrations and more.
 
 ## Usage
 In your package you should let your service provider extend `Porifa\LaravelPackageKit\PackageServiceProvider`.
@@ -67,7 +67,7 @@ $package
     ->hasCommands(YourPackageCommand::class);
 ```
 
-If your package provides multiple commands, you can pass an array to `hasCommands` method
+If your package provides multiple commands, you can pass an array to `hasCommands` method.
 
 ```php
 $package
@@ -77,6 +77,38 @@ $package
         YourOtherPackageCommand::class,
     ]);
 ```
+
+### Working with migrations
+
+
+To register your migration(s), you should create `php` OR `php.stub` file(s) in the `database/migrations` directory of your package. In this example it should be at `<package root>/database/migrations`. 
+
+To register migrations, call `hasMigrations()` on `$package` in the `configurePackage` method and you should pass its name without the extension to the `hasMigrations` method.
+
+If your migration file is called `create_my_package_tables.php.stub` you can register them like this:
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasMigrations('create_my_package_tables');
+```
+
+If your package provides multiple migration files, you can pass an array to `hasMigrations` method.
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasMigrations(['my_package_tables', 'some_other_migration']);
+```
+
+Calling `hasMigrations` will also make migrations publishable. Users of your package will be able to publish the
+migrations with this command:
+
+```bash
+php artisan vendor:publish --tag=your-package-name-migrations
+```
+
+Like you might expect, published migration files will be prefixed with the current datetime.
 
 ### Using lifecycle hooks
 

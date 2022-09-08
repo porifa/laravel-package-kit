@@ -3,6 +3,7 @@
 namespace Porifa\LaravelPackageKit;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Porifa\LaravelPackageKit\Exceptions\InvalidPackageException;
 use ReflectionClass;
 
@@ -47,6 +48,19 @@ abstract class PackageServiceProvider extends ServiceProvider
             if (! empty($this->package->commands)) {
                 $this->commands($this->package->commands);
             }
+
+            foreach ($this->package->migrationFileNames as $migrationFileName) {
+                $filePath = $this->package->basePath("/../database/migrations/{$migrationFileName}.php");
+                if (! file_exists($filePath)) {
+                    // Support for the .stub file extension
+                    $filePath .= '.stub';
+                }
+
+                $this->publishes([
+                    $filePath => $this->generateMigrationName($migrationFileName),
+                ], "{$this->package->shortName()}-migrations");
+
+            }
         }
 
         $this->packageBooted();
@@ -77,6 +91,26 @@ abstract class PackageServiceProvider extends ServiceProvider
     public function newPackage(): Package
     {
         return new Package();
+    }
+
+    public static function generateMigrationName(string $migrationFileName): string
+    {
+        $migrationsPath = 'migrations/';
+
+        $len = strlen($migrationFileName) + 4;
+
+        if (Str::contains($migrationFileName, '/')) {
+            $migrationsPath .= Str::of($migrationFileName)->beforeLast('/')->finish('/');
+            $migrationFileName = Str::of($migrationFileName)->afterLast('/');
+        }
+
+        foreach (glob(database_path("{$migrationsPath}*.php")) as $filename) {
+            if ((substr($filename, -$len) === $migrationFileName . '.php')) {
+                return $filename;
+            }
+        }
+
+        return database_path($migrationsPath . now()->format('Y_m_d_His') . '_' . Str::of($migrationFileName)->snake()->finish('.php'));
     }
 
     protected function getPackageBaseDir(): string
