@@ -6,7 +6,7 @@ use Porifa\LaravelPackageKit\Tests\TestingPackage\Src\TestingPackageServiceProvi
 beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
-            $package->name('example');
+            $package->name('laravel-testing-package');
         };
     }
 );

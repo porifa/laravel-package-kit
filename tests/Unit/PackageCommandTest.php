@@ -8,7 +8,7 @@ beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
             $package
-                ->name('example')
+                ->name('laravel-testing-package')
                 ->hasCommands(PackageTestCommand::class);
         };
     }

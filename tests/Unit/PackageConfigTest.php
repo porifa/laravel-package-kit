@@ -7,20 +7,20 @@ beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
             $package
-            ->name('example')
-            ->hasConfigFiles('example');
+            ->name('laravel-testing-package')
+            ->hasConfigFiles('testing-package');
         };
     }
 );
 
 it('can register the config file', function () {
-    $this->assertEquals('value', config('example.key'));
+    $this->assertEquals('value', config('testing-package.key'));
 });
 
 it('can publish the config file', function () {
     $this
-        ->artisan('vendor:publish --tag=example-config')
+        ->artisan('vendor:publish --tag=testing-package-config')
         ->assertExitCode(0);
 
-    $this->assertFileExists(config_path('example.php'));
+    $this->assertFileExists(config_path('testing-package.php'));
 });

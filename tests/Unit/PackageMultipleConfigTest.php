@@ -6,14 +6,14 @@ use Porifa\LaravelPackageKit\Tests\TestingPackage\Src\TestingPackageServiceProvi
 beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
-            $package->name('example')
-            ->hasConfigFiles(['example', 'example2']);
+            $package->name('laravel-testing-package')
+            ->hasConfigFiles(['testing-package', 'testing-package2']);
         };
     }
 );
 
 it('can register multiple config files', function () {
-    expect(config('example.key'))->toEqual('value');
+    expect(config('testing-package.key'))->toEqual('value');
 
-    expect(config('example2.other_key'))->toEqual('other_value');
+    expect(config('testing-package2.other_key'))->toEqual('other_value');
 });
