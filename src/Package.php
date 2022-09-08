@@ -14,6 +14,8 @@ class Package
 
     public array $migrationFileNames = [];
 
+    public bool $runsMigrations = false;
+
     public string $basePath;
 
     public function name(string $name): self
@@ -54,6 +56,13 @@ class Package
         }
 
         $this->migrationFileNames = $migrationFileNames;
+
+        return $this;
+    }
+
+    public function runsMigrations(bool $runsMigrations = true): self
+    {
+        $this->runsMigrations = $runsMigrations;
 
         return $this;
     }

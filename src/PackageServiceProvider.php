@@ -60,6 +60,9 @@ abstract class PackageServiceProvider extends ServiceProvider
                     $filePath => $this->generateMigrationName($migrationFileName),
                 ], "{$this->package->shortName()}-migrations");
 
+                if ($this->package->runsMigrations) {
+                    $this->loadMigrationsFrom($filePath);
+                }
             }
         }
 
