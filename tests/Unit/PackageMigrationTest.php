@@ -26,7 +26,6 @@ it('can publish the migration', function () {
     $this->assertMigrationPublished('create_laravel_testing_package_table.php');
 });
 
-
 it('does not overwrite the existing migration', function () {
     $this
         ->artisan('vendor:publish --tag=testing-package-migrations')
@@ -44,7 +43,6 @@ it('does not overwrite the existing migration', function () {
 
     $this->assertStringEqualsFile($filePath, 'modified');
 });
-
 
 it('does overwrite the existing migration with force', function () {
     $this

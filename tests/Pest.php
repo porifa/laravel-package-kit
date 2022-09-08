@@ -13,13 +13,12 @@ uses(TestCase::class)
     })
     ->in(__DIR__);
 
-uses()->afterEach(function(){
+uses()->afterEach(function () {
     $configPath = config_path('testing-package.php');
 
     if (file_exists($configPath)) {
         unlink($configPath);
     }
-
     collect(File::allFiles(database_path('migrations')))
         ->each(function (SplFileInfo $file) {
             unlink($file->getPathname());

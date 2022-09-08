@@ -14,7 +14,6 @@ beforeAll(
     }
 );
 
-
 it('can run migrations which registers them', function () {
     /** @var \Illuminate\Database\Migrations\Migrator $migrator */
     $migrator = app('migrator');

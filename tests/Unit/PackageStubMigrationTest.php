@@ -9,12 +9,11 @@ beforeAll(
             $package
             ->name('laravel-testing-package')
             ->hasMigrations([
-                'create_stubed_laravel_testing_package_table'
+                'create_stubed_laravel_testing_package_table',
             ]);
         };
     }
 );
-
 
 it('can publish the migration from stubbed', function () {
     $this
