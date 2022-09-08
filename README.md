@@ -57,7 +57,7 @@ $package
     ->hasConfigFiles(['config-file1', 'config-file2']);
 ```
 
-### ### Working with commands
+### Working with commands
 
 You can register any command you package provides with the `hasCommands` method.
 

@@ -25,7 +25,7 @@ class Package
         return $this;
     }
 
-    public function hasConfigFiles(string|array $configFileName = null): self
+    public function hasConfigFiles(array|string $configFileName = null): self
     {
         $configFileName = $configFileName ?? $this->shortName();
 
@@ -38,7 +38,7 @@ class Package
         return $this;
     }
 
-    public function hasCommands(string|array $commandClassNames): self
+    public function hasCommands(array|string $commandClassNames): self
     {
         if (! is_array($commandClassNames)) {
             $commandClassNames = [$commandClassNames];
@@ -49,7 +49,7 @@ class Package
         return $this;
     }
 
-    public function hasMigrations(string|array $migrationFileNames): self
+    public function hasMigrations(array|string $migrationFileNames): self
     {
         if (! is_array($migrationFileNames)) {
             $migrationFileNames = [$migrationFileNames];
