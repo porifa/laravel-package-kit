@@ -64,6 +64,16 @@ abstract class PackageServiceProvider extends ServiceProvider
                     $this->loadMigrationsFrom($filePath);
                 }
             }
+
+            if ($this->package->hasViews) {
+                $this->publishes([
+                    $this->package->basePath('/../resources/views') => resource_path("views/vendor/{$this->package->shortName()}"),
+                ], "{$this->package->shortName()}-views");
+            }
+        }
+
+        if ($this->package->hasViews) {
+            $this->loadViewsFrom($this->package->basePath('/../resources/views'), $this->package->viewNamespace());
         }
 
         $this->packageBooted();

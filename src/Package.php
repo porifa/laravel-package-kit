@@ -16,6 +16,10 @@ class Package
 
     public bool $runsMigrations = false;
 
+    public bool $hasViews = false;
+
+    public ?string $viewNamespace = null;
+
     public string $basePath;
 
     public function name(string $name): self
@@ -67,6 +71,15 @@ class Package
         return $this;
     }
 
+    public function hasViews(string $namespace = null): self
+    {
+        $this->hasViews = true;
+
+        $this->viewNamespace = $namespace;
+
+        return $this;
+    }
+
     public function shortName(): string
     {
         return Str::after($this->name, 'laravel-');
@@ -79,6 +92,11 @@ class Package
         }
 
         return $this->basePath . DIRECTORY_SEPARATOR . ltrim($directory, DIRECTORY_SEPARATOR);
+    }
+
+    public function viewNamespace(): string
+    {
+        return $this->viewNamespace ?? $this->shortName();
     }
 
     public function setBasePath(string $path): self
