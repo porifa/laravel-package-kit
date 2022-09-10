@@ -23,4 +23,9 @@ uses()->afterEach(function () {
         ->each(function (SplFileInfo $file) {
             unlink($file->getPathname());
         });
+
+    collect(File::allFiles(resource_path('views/vendor')))
+    ->each(function (SplFileInfo $file) {
+        unlink($file->getPathname());
+    });
 })->in(__DIR__);
