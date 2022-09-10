@@ -76,6 +76,16 @@ abstract class PackageServiceProvider extends ServiceProvider
             $this->loadViewsFrom($this->package->basePath('/../resources/views'), $this->package->viewNamespace());
         }
 
+        foreach ($this->package->viewComponents as $componentClass => $prefix) {
+            $this->loadViewComponentsAs($prefix, [$componentClass]);
+        }
+
+        if (count($this->package->viewComponents)) {
+            $this->publishes([
+                $this->package->basePath('/View/Components') => app_path("View/Components/vendor/{$this->package->shortName()}"),
+            ], "{$this->package->shortName()}-components");
+        }
+
         $this->packageBooted();
 
         return $this;

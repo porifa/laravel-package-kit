@@ -139,6 +139,10 @@ views with this command:
 ```bash
 php artisan vendor:publish --tag=your-package-name-views
 ```
+If you have a view `<package root>/resources/views/myView.blade.php`, you can use it like
+this: `view('your-package-name::myView')`. Of course, you can also use subdirectories to organise your views. A view
+located at `<package root>/resources/views/subdirectory/myOtherView.blade.php` can be used
+with `view('your-package-name::subdirectory.myOtherView')`.
 
 If you want to use custom namespace then pass it to the `hasViews` method.
 If your custom namespace is `cool-namespace` you can use like this:
@@ -148,9 +152,38 @@ $package
     ->name('your-package-name')
     ->hasViews('cool-namespace');
 ```
+Now you can use it like this
+
+```php
+view('cool-namespace::myView');
+```
 
 Like you might expect, views are also registered without needing the users of your package to publish them.
 
+
+### Working with Blade view components
+
+Any Blade view components that your package provides should be placed in the `<package root>/src/Components` directory.
+
+You can register these views with the `hasViewComponents` command.
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasViewComponents('foobar', Cool::class);
+```
+
+This will register your view components with Laravel. In the case of `Cool::class`, it can be referenced in views
+as `<x-foobar-cool />`, where `foobar` is the prefix you provided during registration.
+
+Calling `hasViewComponents` will also make view components publishable, and will be published
+to `app/Views/Components/vendor/<package name>`.
+
+Users of your package will be able to publish the view components with this command:
+
+```bash
+php artisan vendor:publish --tag=your-package-name-components
+```
 
 ### Using lifecycle hooks
 

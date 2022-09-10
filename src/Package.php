@@ -20,6 +20,8 @@ class Package
 
     public ?string $viewNamespace = null;
 
+    public array $viewComponents = [];
+
     public string $basePath;
 
     public function name(string $name): self
@@ -76,6 +78,19 @@ class Package
         $this->hasViews = true;
 
         $this->viewNamespace = $namespace;
+
+        return $this;
+    }
+
+    public function hasViewComponents(string $prefix, array|string $viewComponentNames): self
+    {
+        if (! is_array($viewComponentNames)) {
+            $viewComponentNames = [$viewComponentNames];
+        }
+
+        foreach ($viewComponentNames as $componentName) {
+            $this->viewComponents[$componentName] = $prefix;
+        }
 
         return $this;
     }
