@@ -22,7 +22,8 @@ class YourPackageServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('your-package-name')
-            ->hasConfigFiles();
+            ->hasConfigFiles()
+            ->hasViews();
     }
 }
 ```
@@ -118,6 +119,37 @@ $package
     ->hasMigrations(['my_package_tables', 'some_other_migration'])
     ->runsMigrations();
 ```
+
+### Working with views
+
+
+To register your views, you should create `.blade.php` file(s) in the `resources/views` directory of your package. In this example it should be at `<package root>/resources/views`. 
+
+To register views, call `hasViews()` on `$package` in the `configurePackage` method.
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasViews();
+```
+
+Calling `hasViews` will also make views publishable. Users of your package will be able to publish the
+views with this command:
+
+```bash
+php artisan vendor:publish --tag=your-package-name-views
+```
+
+If you want to use custom namespace then pass it to the `hasViews` method.
+If your custom namespace is `cool-namespace` you can use like this:
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasViews('cool-namespace');
+```
+
+Like you might expect, views are also registered without needing the users of your package to publish them.
 
 
 ### Using lifecycle hooks
