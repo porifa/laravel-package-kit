@@ -27,15 +27,15 @@ uses()->afterEach(function () {
 
     if (file_exists(resource_path('views/vendor'))) {
         collect(File::allFiles(resource_path('views/vendor')))
-        ->each(function (SplFileInfo $file) {
-            unlink($file->getPathname());
-        });
+            ->each(function (SplFileInfo $file) {
+                unlink($file->getPathname());
+            });
     }
 
     if (file_exists(app_path('View/Components'))) {
         collect(File::allFiles(app_path('View/Components')))
-        ->each(function (SplFileInfo $file) {
-            unlink($file->getPathname());
-        });
+            ->each(function (SplFileInfo $file) {
+                unlink($file->getPathname());
+            });
     }
 })->in(__DIR__);

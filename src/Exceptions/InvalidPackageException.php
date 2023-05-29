@@ -8,6 +8,6 @@ final class InvalidPackageException extends Exception
 {
     public static function nameIsRequired(): self
     {
-        return new static('This package does not have a name. You can set one with `$package->name("yourName")`');
+        return new self('This package does not have a name. You can set one with `$package->name("yourName")`');
     }
 }

@@ -8,9 +8,9 @@ beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
             $package
-            ->name('laravel-testing-package')
-            ->hasViews()
-            ->hasViewComponents('blabla', FooComponent::class);
+                ->name('laravel-testing-package')
+                ->hasViews()
+                ->hasViewComponents('blabla', FooComponent::class);
         };
     }
 );

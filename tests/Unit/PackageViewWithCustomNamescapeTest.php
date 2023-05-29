@@ -7,8 +7,8 @@ beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
             $package
-            ->name('laravel-testing-package')
-            ->hasViews('foobar-namespace');
+                ->name('laravel-testing-package')
+                ->hasViews('foobar-namespace');
         };
     }
 );

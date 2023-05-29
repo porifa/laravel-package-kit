@@ -7,9 +7,9 @@ beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
             $package
-            ->name('laravel-testing-package')
-            ->hasMigrations('create_laravel_testing_package_table')
-            ->runsMigrations();
+                ->name('laravel-testing-package')
+                ->hasMigrations('create_laravel_testing_package_table')
+                ->runsMigrations();
         };
     }
 );

@@ -7,7 +7,7 @@ beforeAll(
     function () {
         TestingPackageServiceProvider::$configurePackageUsing = function (Package $package) {
             $package->name('laravel-testing-package')
-            ->hasConfigFiles(['testing-package', 'testing-package2']);
+                ->hasConfigFiles(['testing-package', 'testing-package2']);
         };
     }
 );
