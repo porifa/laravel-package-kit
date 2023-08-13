@@ -161,6 +161,17 @@ view('cool-namespace::myView');
 Like you might expect, views are also registered without needing the users of your package to publish them.
 
 
+### Sharing global data with views
+
+You can share data with all views using the `sharesDataWithAllViews` method. This will make the shared variable
+available to all views.
+
+```php
+$package
+    ->name('your-package-name')
+    ->sharesDataWithAllViews('companyName', 'Porifa');
+```
+
 ### Working with Blade view components
 
 Any Blade view components that your package provides should be placed in the `<package root>/src/Components` directory.
@@ -183,6 +194,22 @@ Users of your package will be able to publish the view components with this comm
 
 ```bash
 php artisan vendor:publish --tag=your-package-name-components
+```
+
+### Working with view composers
+
+You can register any view composers that your project uses with the `hasViewComposers` method. You may also register a
+callback that receives a `$view` argument instead of a classname.
+
+To register a view composer with all views, use an asterisk as the view name `'*'`.
+
+```php
+$package
+    ->name('your-package-name')
+    ->hasViewComposer('viewName', MyViewComposer::class)
+    ->hasViewComposer('*', function($view) { 
+        $view->with('sharedVariable', 123); 
+    });
 ```
 
 ### Using lifecycle hooks

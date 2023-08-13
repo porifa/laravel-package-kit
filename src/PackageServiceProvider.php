@@ -4,6 +4,7 @@ namespace Porifa\LaravelPackageKit;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Porifa\LaravelPackageKit\Exceptions\InvalidPackageException;
 use ReflectionClass;
 
@@ -84,6 +85,14 @@ abstract class PackageServiceProvider extends ServiceProvider
             $this->publishes([
                 $this->package->basePath('/View/Components') => app_path("View/Components/vendor/{$this->package->shortName()}"),
             ], "{$this->package->shortName()}-components");
+        }
+
+        foreach ($this->package->sharedViewData as $name => $value) {
+            View::share($name, $value);
+        }
+
+        foreach ($this->package->viewComposers as $viewName => $viewComposer) {
+            View::composer($viewName, $viewComposer);
         }
 
         $this->packageBooted();
