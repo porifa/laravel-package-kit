@@ -2,9 +2,9 @@
 
 namespace Porifa\LaravelPackageKit;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Illuminate\View\View;
 use Porifa\LaravelPackageKit\Exceptions\InvalidPackageException;
 use ReflectionClass;
 
