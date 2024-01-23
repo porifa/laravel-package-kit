@@ -35,7 +35,7 @@ class Package
         return $this;
     }
 
-    public function hasConfigFiles(array|string $configFileName = null): self
+    public function hasConfigFiles(array|string|null $configFileName = null): self
     {
         $configFileName = $configFileName ?? $this->shortName();
 
@@ -77,7 +77,7 @@ class Package
         return $this;
     }
 
-    public function hasViews(string $namespace = null): self
+    public function hasViews(?string $namespace = null): self
     {
         $this->hasViews = true;
 
@@ -124,7 +124,7 @@ class Package
         return Str::after($this->name, 'laravel-');
     }
 
-    public function basePath(string $directory = null): string
+    public function basePath(?string $directory = null): string
     {
         if ($directory === null) {
             return $this->basePath;
